@@ -1,22 +1,25 @@
+'use strict';
 const cheerio = require('cheerio');
 const {getData} = require('./downloader');
 const {getPageData}= require('./getPageData');
-const url = 'https://www.facebook.com'
+const {getLinks}=require('./getLinks');
 
-function crawl() {
+function crawl(url) {
 	return getData(url).then((res) => {
 			const $ = cheerio.load(res);
-					
-			return getPageData($);
+			let Links = getLinks($);
+			let Data = getPageData($);
+			Data.url = url;
+			return {
+				Links,
+				Data,
+			}
 				
 		})
-		.catch((err) => console.error(err));
+		.catch((err) => console.error(err.message));
 	
 }
-crawl()
-.then(res=>{	
-		console.log(res);		
-	});
+
 module.exports = {
 	crawl,
 } 

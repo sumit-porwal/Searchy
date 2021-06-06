@@ -1,8 +1,17 @@
-const cheerio = require('cheerio');
+'use strict';
+const URL = require('url-parse');
+
 function getLinks(page) {
-	const $ = cheerio.load(page);
-	return $('a').map((i, el) => {
-		$(el).attr('href');
-	});
+	let Links = []
+	page('a').map((i, el) => {
+	Links.push(new URL(page(el).attr('href')));
+});
+return Links.filter(url=>{
+	if(url.hostname)
+		return url;
+});
 	// .catch(err=>console.log(err.message()));
+}
+module.exports = {
+	getLinks,
 }
